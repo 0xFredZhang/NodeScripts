@@ -107,29 +107,43 @@ function uninstall_node() {
 
 # 创建钱包
 function add_wallet() {
+  source /root/.gvm/scripts/gvm
+  gvm use go1.22.2
+
   initiad keys add wallet
 }
 
 # 导入钱包
 function import_wallet() {
+  source /root/.gvm/scripts/gvm
+  gvm use go1.22.2
+
   initiad keys add wallet --recover
 }
 
 # 查询余额
 function check_balances() {
+  source /root/.gvm/scripts/gvm
+  gvm use go1.22.2
+
   read -p "请输入钱包地址: " wallet_address
   initiad query bank balances "$wallet_address" --node $initiad_RPC_PORT
 }
 
 # 查看节点同步状态
 function check_sync_status() {
+  source /root/.gvm/scripts/gvm
+  gvm use go1.22.2
+
   initiad status --node $initiad_RPC_PORT | jq .sync_info
 }
 
 # 创建验证者
 function add_validator() {
-  read -p "请输入您的钱包名称: " wallet_name
+  source /root/.gvm/scripts/gvm
+  gvm use go1.22.2
 
+  read -p "请输入您的钱包名称: " wallet_name
   read -p "请输入您想设置的验证者的名字: " validator_name
 
   initiad tx mstaking create-validator --amount=1000000uinit --pubkey=$(initiad tendermint show-validator) --moniker=$validator_name --chain-id=initiation-1 --commission-rate=0.05 --commission-max-rate=0.10 --commission-max-change-rate=0.01 --from=$wallet_name --identity="" --website="" --details="" --gas=2000000 --fees=300000uinit --node $initiad_RPC_PORT -y
@@ -137,6 +151,9 @@ function add_validator() {
 
 # 给自己地址验证者质押
 function delegate_self_validator() {
+  source /root/.gvm/scripts/gvm
+  gvm use go1.22.2
+
   read -p "请输入质押代币数量,比如你有1个init,请输入1000000，以此类推: " math
   read -p "请输入钱包名称: " wallet_name
   initiad tx mstaking delegate $(initiad keys show wallet --bech val -a) ${math}uinit --from $wallet_name --chain-id initiation-1 --gas=2000000 --fees=300000uinit --node $initiad_RPC_PORT -y
@@ -144,8 +161,17 @@ function delegate_self_validator() {
 
 # 出狱
 function unjail() {
+  source /root/.gvm/scripts/gvm
+  gvm use go1.22.2
+
   read -p "请输入钱包名称: " wallet_name
   initiad tx slashing unjail --from $wallet_name --fees=10000amf --chain-id=initiation-1 --node $initiad_RPC_PORT
+}
+
+# 导出验证者key
+function export_priv_validator_key() {
+  echo "====================请将下方所有内容备份到自己的记事本或者excel表格中记录==========================================="
+  cat ~/.initia/config/priv_validator_key.json
 }
 
 # 主菜单
@@ -167,7 +193,8 @@ function main_menu() {
     echo "10. 创建验证者"
     echo "11. 给自己质押"
     echo "12. 释放出监狱"
-    read -p "请输入选项（1-12）: " OPTION
+    echo "13. 备份验证者私钥"
+    read -p "请输入选项（1-13）: " OPTION
 
     case $OPTION in
     1) install_node ;;
@@ -182,6 +209,7 @@ function main_menu() {
     10) add_validator ;;
     11) delegate_self_validator ;;
     12) unjail ;;
+    13) export_priv_validator_key ;;
     0)
       echo "退出脚本。"
       exit 0
