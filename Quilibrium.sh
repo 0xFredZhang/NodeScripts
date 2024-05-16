@@ -53,32 +53,38 @@ function check_service_status() {
 
 function get_peer_id() {
   source /root/.gvm/scripts/gvm
-  gvm use go1.20.2
+  gvm use go1.20.1
   cd ceremonyclient/node || exit
-  OEXPERIMENT=arenas go run ./... -peer-id
+  GOEXPERIMENT=arenas go run ./... -peer-id
 }
 
 # 主菜单
 function main_menu() {
-  clear
-  echo "脚本改编自推特用户大赌哥 @y95277777"
-  echo "================================================================"
-  echo "请选择要执行的操作:"
-  echo "1. 安装运行常规节点(Screen)"
-  echo "2. 查看常规版本节点日志(Screen)"
-  echo "3. 查询PeerId"
-  read -p "请输入选项（1-2）: " OPTION
+  while true; do
+    clear
+    echo "脚本改编自推特用户大赌哥 @y95277777"
+    echo "================================================================"
+    echo "请选择要执行的操作:"
+    echo "1. 安装运行常规节点(Screen)"
+    echo "2. 查看常规版本节点日志(Screen)"
+    echo "3. 查询PeerId"
+    read -p "请输入选项（1-3）: " OPTION
 
-  case $OPTION in
-  1) install_node ;;
-  2) check_service_status ;;
-  3) get_peer_id ;;
-  *)
-    echo "无效选项，请重新输入。"
-    sleep 1
-    ;;
-  esac
-  echo "按任意键返回主菜单..."
+    case $OPTION in
+    1) install_node ;;
+    2) check_service_status ;;
+    3) get_peer_id ;;
+    0)
+      echo "退出脚本。"
+      exit 0
+      ;;
+    *)
+      echo "无效选项，请重新输入。"
+      sleep 1
+      ;;
+    esac
+    echo "按任意键返回主菜单..."
+  done
 }
 
 # 显示主菜单
