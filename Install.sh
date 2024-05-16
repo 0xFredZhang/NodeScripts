@@ -10,7 +10,7 @@ function install_lib() {
   apt update && apt upgrade -y
   apt install -y bison gcc make
   apt install -y curl iptables build-essential git wget jq make gcc nano tmux htop nvme-cli pkg-config libssl-dev libleveldb-dev tar clang bsdmainutils ncdu unzip libleveldb-dev lz4 snapd
-  apt install -y pkg-config curl build-essential libssl-dev libclang-dev ufw docker-compose-plugin -y
+  apt install -y pkg-config curl build-essential libssl-dev libclang-dev ufw
 
   timedatectl set-timezone UTC
 }

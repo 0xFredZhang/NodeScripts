@@ -21,19 +21,22 @@ function install_node() {
   echo "sysctl配置已重新加载"
 
   # 更新并升级Ubuntu软件包
-  sudo apt update && sudo apt -y upgrade
+  apt update && apt -y upgrade
 
   # 安装wget、screen和git等组件
-  sudo apt install git ufw bison screen binutils gcc make bsdmainutils -y
+  apt install git ufw bison screen binutils gcc make bsdmainutils -y
 
   # 克隆仓库
   git clone https://github.com/quilibriumnetwork/ceremonyclient
 
   # 进入ceremonyclient/node目录
-  cd ceremonyclient/node
+  cd ceremonyclient/node || exit
 
   # 赋予执行权限
   chmod +x poor_mans_cd.sh
+
+  # 切换到go1.20.1
+  gvm use go1.20.1
 
   # 创建一个screen会话并运行命令
   screen -dmS Quilibrium bash -c './poor_mans_cd.sh'
