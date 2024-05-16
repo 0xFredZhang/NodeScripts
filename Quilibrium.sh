@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# fork https://raw.githubusercontent.com/a3165458/Quilibrium/main/Quili.sh
+
 # 检查是否以root用户运行脚本
 if [ "$(id -u)" != "0" ]; then
   echo "此脚本需要以root用户权限运行。"
