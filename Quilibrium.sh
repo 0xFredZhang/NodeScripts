@@ -36,6 +36,7 @@ function install_node() {
   chmod +x poor_mans_cd.sh
 
   # 切换到go1.20.1
+  source /root/.gvm/scripts/gvm
   gvm use go1.20.1
 
   # 创建一个screen会话并运行命令
@@ -44,7 +45,17 @@ function install_node() {
 
 # 查看常规版本节点日志
 function check_service_status() {
+  clear
+  echo "3秒后进入screen，查看完请ctrl + a + d 退出"
+  sleep 3
   screen -r Quilibrium
+}
+
+function get_peer_id() {
+  source /root/.gvm/scripts/gvm
+  gvm use go1.20.2
+  cd ceremonyclient/node || exit
+  OEXPERIMENT=arenas go run ./... -peer-id
 }
 
 # 主菜单
@@ -55,13 +66,19 @@ function main_menu() {
   echo "请选择要执行的操作:"
   echo "1. 安装运行常规节点(Screen)"
   echo "2. 查看常规版本节点日志(Screen)"
+  echo "3. 查询PeerId"
   read -p "请输入选项（1-2）: " OPTION
 
   case $OPTION in
   1) install_node ;;
   2) check_service_status ;;
-  *) echo "无效选项。" ;;
+  3) get_peer_id ;;
+  *)
+    echo "无效选项，请重新输入。"
+    sleep 1
+    ;;
   esac
+  echo "按任意键返回主菜单..."
 }
 
 # 显示主菜单
